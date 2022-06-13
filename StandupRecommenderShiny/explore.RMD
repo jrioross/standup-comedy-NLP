@@ -1,0 +1,119 @@
+---
+title: "exploration"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Imports
+
+```{r}
+library(DBI)
+library(tidyverse)
+library(RSQLite)
+```
+
+## Connect and Query
+
+```{r}
+con <- dbConnect(RSQLite::SQLite(), "data/overall_recommender_df_2.sqlite")
+
+
+dbListTables(con)
+
+query <- "
+
+SELECT * 
+FROM overallfull
+
+"
+
+res <- dbSendQuery(con, query)
+
+overallfull <- dbFetch(res)
+
+dbDisconnect(con)
+
+```
+
+## Basic filter
+
+```{r}
+filteredoverall <- overallfull %>% 
+                      filter(
+                              (`fullTitle selection` == "Nate Bargatze: The Greatest Average American (2021)")
+                              &
+                              (`artist selection` != `artist comparison`)
+                          )
+
+top5 <- filteredoverall %>% 
+          slice_max(`cosine similarity`, n = 5)
+
+bottom1 <- filteredoverall %>% 
+          slice_min(`cosine similarity`, n = 1)
+
+top5 %>% bind_rows(bottom1)
+
+```
+
+
+```{r}
+recommend <- function(newArtistsOnly = FALSE, selectedShow){
+  if(newArtistsOnly){
+    filteredoverall <- overallfull %>% 
+                          filter(
+                                  (`fullTitle selection` == selectedShow)
+                                  &
+                                  (`artist selection` != `artist comparison`)
+                          )
+
+    top5 <- filteredoverall %>% 
+          slice_max(`cosine similarity`, n = 5)
+
+    bottom1 <- filteredoverall %>% 
+          slice_min(`cosine similarity`, n = 1)
+    
+    recs <- top5 %>% bind_rows(bottom1)
+    
+    return(recs)
+
+    
+  } else {
+    filteredoverall <- overallfull %>% 
+                          filter(
+                                  (`fullTitle selection` == selectedShow)
+                                  &
+                                  (`cosine similarity` != 1)
+                          )
+    top5 <- filteredoverall %>% 
+          slice_max(`cosine similarity`, n = 5)
+
+    bottom1 <- filteredoverall %>% 
+          slice_min(`cosine similarity`, n = 1)
+    
+    recs <- top5 %>% bind_rows(bottom1)
+    
+    return(recs)
+    
+  }
+
+}
+
+recs <- recommend(newArtistsOnly = FALSE, selectedShow = "Anthony Jeselnik: Thoughts and Prayers (2015)")
+
+imgsrc <- recs %>% 
+        slice(1) %>% 
+        select(`image comparison`)
+
+showList <- overallfull %>% 
+              select(`description selection`) %>%
+              unique() %>% 
+              arrange(`description selection`) %>% 
+              pull()
+
+randomInt <- sample(1:length(showList), 1)
+randomShow <- showList[randomInt]
+```
+
