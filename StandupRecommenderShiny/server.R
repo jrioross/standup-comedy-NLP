@@ -27,7 +27,7 @@ shinyServer(function(input, output) {
         slice(1) 
       
       paste0("<b>", line %>% select(`fullTitle selection`), "</b>"
-             #"<br>Similarity: ", line %>% select(`cosine similarity`) %>% round(3)
+             #"<br>Similarity: ", line %>% select(`mean similarity`) %>% round(3)
              # "<br>Team: ", fcontent %>% select(recent_team),
              # "<br>Age: ", dcontent %>% select(Age) %>% unique(),
              # "<br>Experience: ", dcontent %>% select(Experience) %>% unique(),
@@ -56,7 +56,7 @@ shinyServer(function(input, output) {
         slice(2) 
       
       paste0("<b>", line %>% select(`fullTitle comparison`), "</b>",
-             "<br>Similarity: ", line %>% select(`cosine similarity`) %>% round(3)
+             "<br>Similarity: ", line %>% select(`mean similarity`) %>% round(3)
              # "<br>Team: ", fcontent %>% select(recent_team),
              # "<br>Age: ", dcontent %>% select(Age) %>% unique(),
              # "<br>Experience: ", dcontent %>% select(Experience) %>% unique(),
@@ -85,7 +85,7 @@ shinyServer(function(input, output) {
         slice(3) 
       
       paste0("<b>", line %>% select(`fullTitle comparison`), "</b>",
-             "<br>Similarity: ", line %>% select(`cosine similarity`) %>% round(3)
+             "<br>Similarity: ", line %>% select(`mean similarity`) %>% round(3)
              # "<br>Team: ", fcontent %>% select(recent_team),
              # "<br>Age: ", dcontent %>% select(Age) %>% unique(),
              # "<br>Experience: ", dcontent %>% select(Experience) %>% unique(),
@@ -114,7 +114,7 @@ shinyServer(function(input, output) {
         slice(4) 
       
       paste0("<b>", line %>% select(`fullTitle comparison`), "</b>",
-             "<br>Similarity: ", line %>% select(`cosine similarity`) %>% round(3)
+             "<br>Similarity: ", line %>% select(`mean similarity`) %>% round(3)
              # "<br>Team: ", fcontent %>% select(recent_team),
              # "<br>Age: ", dcontent %>% select(Age) %>% unique(),
              # "<br>Experience: ", dcontent %>% select(Experience) %>% unique(),
@@ -143,7 +143,7 @@ shinyServer(function(input, output) {
         slice(5) 
       
       paste0("<b>", line %>% select(`fullTitle comparison`), "</b>",
-             "<br>Similarity: ", line %>% select(`cosine similarity`) %>% round(3)
+             "<br>Similarity: ", line %>% select(`mean similarity`) %>% round(3)
              # "<br>Team: ", fcontent %>% select(recent_team),
              # "<br>Age: ", dcontent %>% select(Age) %>% unique(),
              # "<br>Experience: ", dcontent %>% select(Experience) %>% unique(),
@@ -172,7 +172,7 @@ shinyServer(function(input, output) {
         slice(6) 
       
       paste0("<b>", line %>% select(`fullTitle comparison`), "</b>",
-             "<br>Similarity: ", line %>% select(`cosine similarity`) %>% round(3)
+             "<br>Similarity: ", line %>% select(`mean similarity`) %>% round(3)
              # "<br>Team: ", fcontent %>% select(recent_team),
              # "<br>Age: ", dcontent %>% select(Age) %>% unique(),
              # "<br>Experience: ", dcontent %>% select(Experience) %>% unique(),
@@ -201,7 +201,7 @@ shinyServer(function(input, output) {
         slice(7) 
       
       paste0("<b>", line %>% select(`fullTitle comparison`), "</b>",
-             "<br>Similarity: ", line %>% select(`cosine similarity`) %>% round(3)
+             "<br>Similarity: ", line %>% select(`mean similarity`) %>% round(3)
              # "<br>Team: ", fcontent %>% select(recent_team),
              # "<br>Age: ", dcontent %>% select(Age) %>% unique(),
              # "<br>Experience: ", dcontent %>% select(Experience) %>% unique(),

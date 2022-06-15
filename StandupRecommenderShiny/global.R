@@ -18,8 +18,8 @@ library(RSQLite)
 library(rsconnect)
 
 # Get data from sqlite database
-con <- dbConnect(RSQLite::SQLite(), "data/overall_recommender_df.sqlite")
-query <- "SELECT *FROM overallfull;"
+con <- dbConnect(RSQLite::SQLite(), "data/metacosims_recommender.sqlite")
+query <- "SELECT * FROM metacosims;"
 res <- dbSendQuery(con, query)
 overallfull <- dbFetch(res)
 dbDisconnect(con)
@@ -48,13 +48,13 @@ recommend <- function(newArtistsOnly = FALSE, selectedShow){
     
     self <- overallfull %>% 
       filter(`fullTitle selection` == selectedShow) %>% 
-      slice_max(`cosine similarity`, n = 1)
+      slice_max(`mean similarity`, n = 1)
     
     top5 <- filteredoverall %>% 
-      slice_max(`cosine similarity`, n = 5)
+      slice_max(`mean similarity`, n = 5)
     
     bottom1 <- filteredoverall %>% 
-      slice_min(`cosine similarity`, n = 1)
+      slice_min(`mean similarity`, n = 1)
     
     recs <- self %>% bind_rows(top5) %>% bind_rows(bottom1)
     
@@ -67,18 +67,20 @@ recommend <- function(newArtistsOnly = FALSE, selectedShow){
       filter(
         (`fullTitle selection` == selectedShow)
         &
-        (`cosine similarity` != 1)
+        (`mean similarity` <= 0.999999)
       )
     
     # self <- overallfull %>%
     #   filter(`fullTitle selection` == selectedShow) %>%
-    #   slice_max(`cosine similarity`, n = 1)
+    #   slice_max(`mean similarity`, n = 1)
     
     top5 <- filteredoverall %>% 
-      slice_max(`cosine similarity`, n = 6)
+      slice_max(`mean similarity`, n = 6)
     
     bottom1 <- filteredoverall %>% 
-      slice_min(`cosine similarity`, n = 1)
+      slice_min(`mean similarity`, n = 1)
+    
+    # recs <- self %>% bind_rows(top5) %>% bind_rows(bottom1)
     
     recs <- top5 %>% bind_rows(bottom1)
     
