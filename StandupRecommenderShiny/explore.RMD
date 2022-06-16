@@ -18,7 +18,7 @@ library(RSQLite)
 ## Connect and Query
 
 ```{r}
-con <- dbConnect(RSQLite::SQLite(), "data/overall_recommender_df_2.sqlite")
+con <- dbConnect(RSQLite::SQLite(), "data/metacosims_recommender.sqlite")
 
 
 dbListTables(con)
@@ -26,7 +26,7 @@ dbListTables(con)
 query <- "
 
 SELECT * 
-FROM overallfull
+FROM metacosims
 
 "
 
@@ -70,10 +70,10 @@ recommend <- function(newArtistsOnly = FALSE, selectedShow){
                           )
 
     top5 <- filteredoverall %>% 
-          slice_max(`cosine similarity`, n = 5)
+          slice_max(`mean similarity`, n = 5)
 
     bottom1 <- filteredoverall %>% 
-          slice_min(`cosine similarity`, n = 1)
+          slice_min(`mean similarity`, n = 1)
     
     recs <- top5 %>% bind_rows(bottom1)
     
@@ -82,16 +82,14 @@ recommend <- function(newArtistsOnly = FALSE, selectedShow){
     
   } else {
     filteredoverall <- overallfull %>% 
-                          filter(
-                                  (`fullTitle selection` == selectedShow)
-                                  &
-                                  (`cosine similarity` != 1)
-                          )
+                          filter(`fullTitle selection` == selectedShow) %>% 
+                          filter(`mean similarity` < 0.98)
+                          
     top5 <- filteredoverall %>% 
-          slice_max(`cosine similarity`, n = 5)
+          slice_max(`mean similarity`, n = 5)
 
     bottom1 <- filteredoverall %>% 
-          slice_min(`cosine similarity`, n = 1)
+          slice_min(`mean similarity`, n = 1)
     
     recs <- top5 %>% bind_rows(bottom1)
     
@@ -103,6 +101,10 @@ recommend <- function(newArtistsOnly = FALSE, selectedShow){
 
 recs <- recommend(newArtistsOnly = FALSE, selectedShow = "Anthony Jeselnik: Thoughts and Prayers (2015)")
 
+recs
+```
+
+```{r}
 imgsrc <- recs %>% 
         slice(1) %>% 
         select(`image comparison`)

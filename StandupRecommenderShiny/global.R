@@ -64,25 +64,22 @@ recommend <- function(newArtistsOnly = FALSE, selectedShow){
   } else {
     
     filteredoverall <- overallfull %>% 
-      filter(
-        (`fullTitle selection` == selectedShow)
-        &
-        (`mean similarity` <= 0.999999)
-      )
+      filter(`fullTitle selection` == selectedShow) %>% 
+      filter(`mean similarity` < 0.98)
     
-    # self <- overallfull %>%
-    #   filter(`fullTitle selection` == selectedShow) %>%
-    #   slice_max(`mean similarity`, n = 1)
+    self <- overallfull %>%
+      filter(`fullTitle selection` == selectedShow) %>%
+      slice_max(`mean similarity`, n = 1)
     
     top5 <- filteredoverall %>% 
-      slice_max(`mean similarity`, n = 6)
+      slice_max(`mean similarity`, n = 5)
     
     bottom1 <- filteredoverall %>% 
       slice_min(`mean similarity`, n = 1)
     
-    # recs <- self %>% bind_rows(top5) %>% bind_rows(bottom1)
+    recs <- self %>% bind_rows(top5) %>% bind_rows(bottom1)
     
-    recs <- top5 %>% bind_rows(bottom1)
+    # recs <- top5 %>% bind_rows(bottom1)
     
     return(recs)
     
